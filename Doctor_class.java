@@ -3,7 +3,6 @@ import java.util.Random;
 
 public class Doctor extends Thread
 {
-    private boolean avaliablePatient = false;
     private int ID;
     private boolean Doc_availiable = true;
     private Patient p;
