@@ -3,7 +3,7 @@ import java.util.Random;
 
 public class Doctor extends Thread
 {
-    //private boolean avaliablePatient = false;
+    private boolean avaliablePatient = false;
     private int ID;
     private boolean Doc_availiable = true;
     private Patient p;
@@ -28,7 +28,7 @@ public class Doctor extends Thread
             if(w.checkWaitingRoom())
             {
                 
-                System.out.println("Paitent " + p.getID()+ " assigned to doctor "+ getDocID);
+                System.out.println("Patient " + p.getID()+ " assigned to doctor "+ getDocID());
                 p = w.getPatient(); //get patient from waiting room
                 Doc_availiable = false;
 
@@ -40,12 +40,23 @@ public class Doctor extends Thread
                     int random_Time = r.nextInt(5);
                     //wait a random time from 0 seconds to 5 seconds
                     try { wait(random_Time*1000) ; } catch( InterruptedException e ) { }
+
                     //doctor treated patient and will release treatment room
                     //TBD and ask how to acquire treatment room as doctor and release it
+                    
                     t.releaseTR();
+                    System.out.println("Patient " + p.getID()+ "has been treated by doctor "+ getDocID())
+                    Doc_availiable = true;
 
                 }
+                else
+                {
+                    w.add_patient(p);
+                    Doc_availiable = true;
+                }
             }
+            if(!w.checkWaitingRoom){ break; }//if there is no more patients in waiting room,
+            //we exit the loop
         }
     }
 }
