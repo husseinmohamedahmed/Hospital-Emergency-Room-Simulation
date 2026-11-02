@@ -28,8 +28,8 @@ public class Doctor extends Thread
             if(w.checkWaitingRoom())
             {
                 
-                System.out.println("Patient " + p.getID()+ " assigned to doctor "+ getDocID());
-                p = w.getPatient(); //get patient from waiting room
+                System.out.println("Patient " + p.getPatientID()+ " assigned to doctor "+ getDocID());
+                p = w.takepatient(); //get patient from waiting room
                 Doc_availiable = false;
 
                 //try to acquire treatment room
@@ -45,13 +45,13 @@ public class Doctor extends Thread
                     //TBD and ask how to acquire treatment room as doctor and release it
                     
                     t.releaseTR();
-                    System.out.println("Patient " + p.getID()+ "has been treated by doctor "+ getDocID())
+                    System.out.println("Patient " + p.getPatientID()+ "has been treated by doctor "+ getDocID())
                     Doc_availiable = true;
 
                 }
                 else
                 {
-                    w.add_patient(p);
+                    w.returnpatient(p);
                     Doc_availiable = true;
                 }
             }
