@@ -8,7 +8,7 @@ public class Doctor extends Thread
     private boolean Doc_availiable = true;
     private Patient p;
     private waitingRoom w;
-    private treatmentRoom t;
+    private Semaphore s;
     Random r = new Random();
 
     public Doctor(waitingRoom w, int ID)
@@ -33,19 +33,15 @@ public class Doctor extends Thread
                 Doc_availiable = false;
 
                 //try to acquire treatment room
-                //TBD
 
-                if(t.availableTR())//if treatment room aquired
+                if(s.tryaquire())//if treatment room aquired
                 {
                     int random_Time = r.nextInt(5);
                     //wait a random time from 0 seconds to 5 seconds
                     try { wait(random_Time*1000) ; } catch( InterruptedException e ) { }
-
-                    //doctor treated patient and will release treatment room
-                    //TBD and ask how to acquire treatment room as doctor and release it
                     
-                    t.releaseTR();
-                    System.out.println("Patient " + p.getPatientID()+ "has been treated by doctor "+ getDocID())
+                    s.release();
+                    System.out.println("Patient " + p.getPatientID()+ "has been treated by doctor "+ getDocID());
                     Doc_availiable = true;
 
                 }
