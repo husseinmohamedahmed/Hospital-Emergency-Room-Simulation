@@ -25,7 +25,7 @@ public class Doctor extends Thread
         while(true)
         {
             //check if any patient avaliable in the waiting room
-            if(w.checkWaitingRoom())
+            if(w.getPat_waitingcount() != 0)
             {
                 
                 System.out.println("Patient " + p.getPatientID()+ " assigned to doctor "+ getDocID());
@@ -51,7 +51,7 @@ public class Doctor extends Thread
                     Doc_availiable = true;
                 }
             }
-            if(!w.checkWaitingRoom){ break; }//if there is no more patients in waiting room,
+            if(w.getPat_waitingcount() == 0){ break; }//if there is no more patients in waiting room,
             //we exit the loop
         }
     }
