@@ -25,7 +25,7 @@ public class Doctor extends Thread
         while(true)
         {
             //check if any patient avaliable in the waiting room
-            if(w.getPat_waitingcount() != 0)
+            if(w.getPat_waitingcount() > 0)
             {
                 
                 System.out.println("Patient " + p.getPatientID()+ " assigned to doctor "+ getDocID());
@@ -42,11 +42,13 @@ public class Doctor extends Thread
                     
                     s.release();
                     System.out.println("Patient " + p.getPatientID()+ "has been treated by doctor "+ getDocID());
+                    System.out.println("Doctor " + getDocID()+ "is now available");
                     Doc_availiable = true;
 
                 }
-                else
+                else //failed to aquire treatment room
                 {
+                    System.out.println("Doctor "+ getDocID() + "could not get aquire treatment room, returnig patient " +p.getPatientID()+ " to waiting room.");
                     w.returnpatient(p);
                     Doc_availiable = true;
                 }
