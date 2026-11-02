@@ -1,4 +1,5 @@
 /*Doctor class*/
+/*doctor_class*/
 import java.util.Random;
 
 public class Doctor extends Thread
