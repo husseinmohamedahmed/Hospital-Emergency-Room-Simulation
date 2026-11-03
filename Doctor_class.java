@@ -42,7 +42,7 @@ public class Doctor extends Thread
                     //wait a random time from 0 seconds to 5 seconds
                     try { wait(random_Time*1000) ; } catch( InterruptedException e ) { }
                     
-                    s.release();
+                    s.release();//doctor finished treating patient and releases the treatment room
                     System.out.println("Patient " + p.getPatientID()+ "has been treated by doctor "+ getDocID());
                     System.out.println("Doctor " + getDocID()+ "is now available");
                     Doc_availiable = true;
