@@ -1,5 +1,4 @@
 
-
 import java.util.Scanner;
 
 public class Hospital {
@@ -31,8 +30,8 @@ public class Hospital {
             int numPatients = checksInput(input, "Number of patients:");
 
 
-            waitingRoom waitingRoom = new waitingRoom(capacity);
-            TreatmentRooms treatmentRooms = new TreatmentRooms(2);          // in the requirements it must be 2 treatment rooms
+            waitingRoom waitingRoom = new waitingRoom(capacity, numPatients);
+            Semaphore treatmentRooms = new Semaphore(2);   // 2 treatment rooms        // in the requirements it must be 2 treatment rooms
 
 
            Doctor[] doctors = new Doctor[numDoctors];
@@ -54,18 +53,19 @@ public class Hospital {
 
 
 
-
         for (int i = 0; i < numDoctors; i++) {
         doctors[i].start();
     }
-
-
         for (int i = 0; i < numPatients; i++) {
-        patients[i].start();
-    }
+                patients[i].start();
+            }
 
 
-        for (int i = 0; i < numPatients; i++) {
+
+
+
+
+            for (int i = 0; i < numPatients; i++) {
         try {
             patients[i].join();
         } catch (InterruptedException e) {
@@ -74,7 +74,9 @@ public class Hospital {
     }
 
 
-
+            for (int i = 0; i < numDoctors; i++) {
+                doctors[i].interrupt();
+            }
 
         for (int i = 0; i < numDoctors; i++) {
         try {
