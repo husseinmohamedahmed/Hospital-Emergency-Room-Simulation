@@ -11,10 +11,10 @@ public class Doctor extends Thread
     private Semaphore s;
     Random r = new Random();
 
-    public Doctor(waitingRoom w, int ID, Semaphore s)
+    public Doctor(int ID, waitingRoom w, Semaphore s)
     {
-        this.w = w;
         this.ID = ID;
+        this.w = w;
         this.s = s;
     }
 
