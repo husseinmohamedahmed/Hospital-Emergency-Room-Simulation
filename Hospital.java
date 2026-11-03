@@ -74,9 +74,7 @@ public class Hospital {
     }
 
 
-            for (int i = 0; i < numDoctors; i++) {
-                doctors[i].interrupt();
-            }
+         waitingRoom.stopDoctors(numDoctors);   
 
         for (int i = 0; i < numDoctors; i++) {
         try {
