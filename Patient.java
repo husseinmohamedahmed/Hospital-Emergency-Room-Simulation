@@ -8,7 +8,7 @@ public class Patient extends Thread {
 
       this.patientID = patientID;
       this.waitingRoom = waitingRoom;
-      this.treatmentDone = new Semaphore(0);  // zero means not treated yet
+      this.treatmentDone = new Semaphore(0); 
 
   }
 
@@ -29,10 +29,10 @@ public class Patient extends Thread {
     public void run(){
         System.out.println("P"+patientID+" arrived");
 
-        waitingRoom.enterWaitingRoom(this);    // from habiba's code
+        waitingRoom.enterWaitingRoom(this);    
 
       try {
-          treatmentDone.aquire();                             // checkk
+          treatmentDone.acquire();                             
       } catch (InterruptedException e) {
           System.out.println("error in patient's run method");
           return;

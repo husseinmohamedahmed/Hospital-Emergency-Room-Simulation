@@ -1,4 +1,3 @@
-// el hy3tamed 3alia zy el doc lazem y3adel esm el clas l --->waitingRoom
 
 
 public class waitingRoom{
@@ -6,7 +5,7 @@ public class waitingRoom{
     private int size;
     
 
-    //chech mn hanya esm el class  <------
+   
     private  Patient store[];
     // where we will insert 1st patient in waiting room 
     private int inptr=0;
@@ -14,7 +13,7 @@ public class waitingRoom{
     private int outptr=0;
     private int count=0;// number of patients in waiting room
 
-    // check mn hussien  esm class el Semaphore <------
+
     private Semaphore spaces;//number of chairs available
     private Semaphore elements;//number of patients in waiting room
     private Semaphore mutex;//made to prevent race condition
@@ -25,8 +24,7 @@ public class waitingRoom{
 
 
     //constructor
-    // check mn hussien  esm class el Semaphore <------
-    // check mn hanya esm el class  <------
+
     public waitingRoom(int size,int totalPatients){
         this.size=size;
         store=new Patient[size];//patients number in waiting room
@@ -36,17 +34,30 @@ public class waitingRoom{
         outside=new Patient[totalPatients];//patient in line out waiting to entre waiting room
     }
 
-    //check mn hanya esm el class  <------
-    // entre waiting room handeling function
+
     public void enterWaitingRoom(Patient patient){
         //avoid el critical section(prevent 2 patient to enter or do same thing at same time)
 
-        mutex.acquire();//only 1 have lock and rest wait until it finishes
+        try {
+          mutex.acquire();//only 1 have lock and rest wait until it finishes
+        } catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+          return;
+        }
 
-        // t3deeeeel mhohem 3and hussien  fee el if
-        // try p lazem tb2a fe el Semaphore class de 8eer el lap bt3et el lab mesh bt7gez mkan low rag3 true f el requirment el matlob 3awez a7gez mkan 
-        //so lazem nst3mel tryp badel spaces.acquire() 3ashan n3rf lw fe mkan wla la2 
-        if (outsideCount>0 || !spaces.tryAcquire(0)){
+        
+        boolean hasSpace = false;
+        if (outsideCount == 0) {
+          try {
+            hasSpace = spaces.tryAcquire(0);
+          } catch (InterruptedException e) {
+            mutex.release();
+            Thread.currentThread().interrupt();
+            return;
+          }
+        }
+
+        if (outsideCount > 0 || !hasSpace){
             //if the line have patients waiting 
             outside[outsideIn]=patient;//put the patient in the line
             outsideIn=(outsideIn+1)%outside.length;//% if we are in end go to front again as it is circular array
@@ -55,8 +66,7 @@ public class waitingRoom{
             System.out.println(patient + " is waiting outside the waiting room");
         }
    
-        // check mn hanya esm el class  <------
-        // check mn hussien  esm el class el Semaphore <------
+
         else{
             store[inptr]=patient;// put the patient in the waiting room 
             inptr = (inptr +1) % size ;
@@ -69,13 +79,22 @@ public class waitingRoom{
         }
 
 
-        // function to make doc take patient from el waiting room 
-        //check mn hanya  esm el class  <------
-        //check mn hussien  esm el class  <------
+      
         public Patient takepatient(){
          Patient patient;
-          elements.acquire();//wait until you have a patient
-          mutex.acquire();//to know how many patient will he take to avoid critical situation
+          try {
+            elements.acquire();//wait until you have a patient
+          } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return null;
+          }
+          try {
+            mutex.acquire();//to know how many patient will he take to avoid critical situation
+          } catch (InterruptedException e) {
+            elements.release();
+            Thread.currentThread().interrupt();
+            return null;
+          }
           patient = store[outptr];//take the patient from the waiting room
           store[outptr]=null;//empty the place to avoid dangling pointer
           outptr=(outptr + 1) %size;//to go to the next patient in the waiting room 
@@ -103,9 +122,7 @@ public class waitingRoom{
 
           }
 
-          //check mn hanya  esm el class  <------
-// mahmoud hyst5adem el method de el mafrood returnpatient 
-          //function to return patient if there is no tratment room avaliabel 
+           
           public void returnpatient(Patient patient)
           {
             enterWaitingRoom(patient);//go to the function we did up 
@@ -114,8 +131,12 @@ public class waitingRoom{
           public int getPat_waitingcount() {
             // to prevent race condition 
 
-
-            mutex.acquire();
+            try {
+              mutex.acquire();
+            } catch (InterruptedException e) {
+              Thread.currentThread().interrupt();
+              return count;
+            }
             int currentCount = count;
             mutex.release();
             return currentCount;
@@ -124,7 +145,12 @@ public class waitingRoom{
           //get the number of patients waiting outside in line 
           public int getPat_outsidecount() {
             // to prevent race condition 
-            mutex.acquire();
+            try {
+              mutex.acquire();
+            } catch (InterruptedException e) {
+              Thread.currentThread().interrupt();
+              return outsideCount;
+            }
             int currentCount = outsideCount;
             mutex.release();
             return currentCount;

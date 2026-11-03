@@ -12,7 +12,7 @@ public class Hospital {
             System.out.print(question);
 
             int num = input.nextInt();
-            if (num <= 0) {                         // handles the input if it is zero or negative number
+            if (num <= 0) {                         
                 System.out.println("the number must be greater than zero");
                 continue;
             }
@@ -31,7 +31,7 @@ public class Hospital {
 
 
             waitingRoom waitingRoom = new waitingRoom(capacity, numPatients);
-            Semaphore treatmentRooms = new Semaphore(2);   // 2 treatment rooms        // in the requirements it must be 2 treatment rooms
+            Semaphore treatmentRooms = new Semaphore(2);   
 
 
            Doctor[] doctors = new Doctor[numDoctors];
@@ -74,7 +74,8 @@ public class Hospital {
     }
 
 
-         waitingRoom.stopDoctors(numDoctors);   
+         for (int i = 0; i < numDoctors; i++) {
+        doctors[i].interrupt();}   
 
         for (int i = 0; i < numDoctors; i++) {
         try {
