@@ -11,10 +11,11 @@ public class Doctor extends Thread
     private Semaphore s;
     Random r = new Random();
 
-    public Doctor(waitingRoom w, int ID)
+    public Doctor(waitingRoom w, int ID, Semaphore s)
     {
         this.w = w;
         this.ID = ID;
+        this.s = s;
     }
 
     public int getDocID()
@@ -34,8 +35,9 @@ public class Doctor extends Thread
 
                 //try to acquire treatment room
 
-                if(s.tryaquire())//if treatment room aquired
+                if(s.tryaquire())//if treatment room available to aquire
                 {
+                    s.aquire();
                     int random_Time = r.nextInt(5);
                     //wait a random time from 0 seconds to 5 seconds
                     try { wait(random_Time*1000) ; } catch( InterruptedException e ) { }
@@ -53,7 +55,7 @@ public class Doctor extends Thread
                     Doc_availiable = true;
                 }
             }
-            if(w.getPat_waitingcount() == 0){ break; }//if there is no more patients in waiting room,
+            if(w.getPat_waitingcount() == 0 && w.getPat_outsidecount() == 0){ break; }//if there is no more patients in waiting room or outside,
             //we exit the loop
         }
     }
