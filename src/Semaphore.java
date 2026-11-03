@@ -8,12 +8,12 @@ public class Semaphore {
         this.permits = permits;
     }
 
-    protected synchronized void aquire(){  
+    protected synchronized void acquire(){  
               
         while(permits<=0){ 
              try { wait() ; } catch( InterruptedException e ) {
             Thread.currentThread().interrupt(); 
-            
+            return;
         }
     }
  permits--;}
@@ -25,7 +25,7 @@ public class Semaphore {
         this.notify();
     }
     
-    protected synchronized boolean tryAquire (long timeoutMillis){
+    protected synchronized boolean tryAcquire (long timeoutMillis){
         long endTime = System.currentTimeMillis() + timeoutMillis;
         long remainingTime;
 
