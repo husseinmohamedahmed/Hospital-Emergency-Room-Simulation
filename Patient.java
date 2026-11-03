@@ -1,8 +1,8 @@
 
 public class Patient extends Thread {
     private int patientID;
-    private waitingRoom waitingRoom;    //habiba's class
-    private Semaphore treatmentDone;    //hussein's class
+    private waitingRoom waitingRoom;    
+    private Semaphore treatmentDone;    
 
   public Patient(int patientID,waitingRoom waitingRoom){
 
@@ -16,6 +16,11 @@ public class Patient extends Thread {
       return patientID;
   }
 
+    @Override
+    public String toString() {
+        return "P" + patientID;
+    }
+
   public Semaphore getTreatmentDone(){
       return treatmentDone;
   }
@@ -27,7 +32,7 @@ public class Patient extends Thread {
         waitingRoom.enterWaitingRoom(this);    // from habiba's code
 
       try {
-          treatmentDone.p();      //from semaphore--
+          treatmentDone.aquire();                             // checkk
       } catch (InterruptedException e) {
           System.out.println("error in patient's run method");
           return;
