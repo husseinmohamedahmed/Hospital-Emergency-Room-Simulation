@@ -55,7 +55,7 @@ public class Doctor extends Thread
                     Doc_availiable = true;
                 }
             }
-            if(w.getPat_waitingcount() == 0 && w.getPat_outsidecount() == 0){ break; }//if there is no more patients in waiting room or outside,
+            if((w.getPat_waitingcount() == 0) && (w.getPat_outsidecount() == 0)){ break; }//if there is no more patients in waiting room or outside,
             //we exit the loop
         }
     }
